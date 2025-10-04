@@ -3,96 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Keeper - Preserve Family Stories Forever</title>
+    <title>Memory Keeper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Welcome Screen (shown first) -->
-    <div class="welcome-screen" id="welcomeScreen">
-        <div class="welcome-content">
-            <div class="welcome-hero">
-                <div class="hero-icon">💝</div>
-                <h1 class="hero-title">Memory Keeper</h1>
-                <p class="hero-subtitle">Preserve precious family stories through natural conversations</p>
-            </div>
-            
-            <div class="welcome-features">
-                <div class="feature-item">
-                    <span class="feature-icon">💬</span>
-                    <div>
-                        <h3>Natural Conversations</h3>
-                        <p>AI that asks thoughtful questions to unlock deeper memories</p>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <span class="feature-icon">📖</span>
-                    <div>
-                        <h3>Beautiful Stories</h3>
-                        <p>Transform conversations into shareable family treasures</p>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <span class="feature-icon">📊</span>
-                    <div>
-                        <h3>Progress Tracking</h3>
-                        <p>Watch your family history grow with smart analytics</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="welcome-actions">
-                <button class="start-btn" onclick="startMemoryKeeping()">
-                    Start Preserving Memories ✨
-                </button>
-                <p class="welcome-note">Join thousands of families preserving their stories</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main App (hidden initially) -->
-    <div class="app-container" id="appContainer" style="display: none;">
-        <header class="app-header">
-            <div class="header-content">
-                <h1>💝 Memory Keeper</h1>
-                <p>Capturing precious family moments, one story at a time</p>
-                <div class="header-stats">
-                    <span id="conversationCount">Conversation 1</span>
-                    <span>•</span>
-                    <span id="memoryCount">0 memories shared</span>
-                </div>
-            </div>
+    <div class="container">
+        <header class="header">
+            <h1>💝 Memory Keeper</h1>
+            <p>Preserving precious family stories forever</p>
         </header>
         
-        <div class="chat-container">
-            <div class="messages-area" id="messagesArea">
-                <div class="ai-message welcome-message">
-                    <div class="ai-avatar">🤖</div>
-                    <div class="message-bubble">
-                        <div class="message-header">Memory Keeper AI</div>
-                        Hello! I'm so excited to help you capture beautiful family memories. Let's start with something that makes you smile - tell me about a favorite childhood memory? ✨
-                    </div>
-                </div>
-            </div>
-            
-            <div class="input-area">
-                <div class="input-wrapper">
-                    <input type="text" id="messageInput" placeholder="Share your precious memory here...">
-                    <button id="sendButton">
-                        <span class="send-icon">📤</span>
-                    </button>
-                </div>
+        <div class="chat-area" id="chatArea">
+            <div class="message ai-message">
+                <strong>Memory Keeper:</strong> Hello! I'm here to help you capture beautiful family memories. Tell me about a favorite childhood memory to get started! ✨
             </div>
         </div>
         
-        <div class="actions-panel">
-            <button id="generateBlog" class="primary-action">
-                <span>📖</span> Create Family Story
-            </button>
-            <button id="newConversation" class="secondary-action">
-                <span>🆕</span> New Memory Session
-            </button>
-        </div>
+        <div class="prompts" id="prompts">
+    <p><strong>💡 Need ideas? Click any prompt:</strong></p>
+    <button onclick="usePrompt('Tell me about your first job')">Tell me about your first job</button>
+    <button onclick="usePrompt('What was your wedding day like?')">What was your wedding day like?</button>
+    <button onclick="usePrompt('Describe your childhood home')">Describe your childhood home</button>
+    <button onclick="showMorePrompts()" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none;">
+        More Ideas ✨
+    </button>
+</div>
+
+        
+        <div class="input-section">
+    <input type="text" id="messageInput" placeholder="Share your memory here...">
+    <button id="voiceButton" class="voice-btn" title="Click to record your memory">
+        🎤
+    </button>
+    <button onclick="sendMessage()" id="sendBtn">Send</button>
+</div>
+<div class="voice-status" id="voiceStatus" style="display: none;">
+    <div class="listening-animation">
+        <div class="pulse-dot"></div>
+        <span>Listening... speak your memory clearly</span>
+    </div>
+</div>
+
+        <div class="actions">
+    <button onclick="generateStory()" id="storyBtn">📖 Create Story</button>
+    <button onclick="showStats()" id="statsBtn">📊 View Stats</button>
+    <button onclick="shareMemoryStory()" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; font-weight: 600; transition: all 0.3s; font-size: 14px;">📤 Share</button>
+    <button onclick="newChat()" id="newBtn">🆕 New Chat</button>
+</div>
+
     </div>
     
     <script src="script.js"></script>
