@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Keeper - Preserve Family Stories Forever</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Welcome Screen (shown first) -->
+    <div class="welcome-screen" id="welcomeScreen">
+        <div class="welcome-content">
+            <div class="welcome-hero">
+                <div class="hero-icon">💝</div>
+                <h1 class="hero-title">Memory Keeper</h1>
+                <p class="hero-subtitle">Preserve precious family stories through natural conversations</p>
+            </div>
+            
+            <div class="welcome-features">
+                <div class="feature-item">
+                    <span class="feature-icon">💬</span>
+                    <div>
+                        <h3>Natural Conversations</h3>
+                        <p>AI that asks thoughtful questions to unlock deeper memories</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📖</span>
+                    <div>
+                        <h3>Beautiful Stories</h3>
+                        <p>Transform conversations into shareable family treasures</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📊</span>
+                    <div>
+                        <h3>Progress Tracking</h3>
+                        <p>Watch your family history grow with smart analytics</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="welcome-actions">
+                <button class="start-btn" onclick="startMemoryKeeping()">
+                    Start Preserving Memories ✨
+                </button>
+                <p class="welcome-note">Join thousands of families preserving their stories</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App (hidden initially) -->
+    <div class="app-container" id="appContainer" style="display: none;">
+        <header class="app-header">
+            <div class="header-content">
+                <h1>💝 Memory Keeper</h1>
+                <p>Capturing precious family moments, one story at a time</p>
+                <div class="header-stats">
+                    <span id="conversationCount">Conversation 1</span>
+                    <span>•</span>
+                    <span id="memoryCount">0 memories shared</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="chat-container">
+            <div class="messages-area" id="messagesArea">
+                <div class="ai-message welcome-message">
+                    <div class="ai-avatar">🤖</div>
+                    <div class="message-bubble">
+                        <div class="message-header">Memory Keeper AI</div>
+                        Hello! I'm so excited to help you capture beautiful family memories. Let's start with something that makes you smile - tell me about a favorite childhood memory? ✨
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <input type="text" id="messageInput" placeholder="Share your precious memory here...">
+                    <button id="sendButton">
+                        <span class="send-icon">📤</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="actions-panel">
+            <button id="generateBlog" class="primary-action">
+                <span>📖</span> Create Family Story
+            </button>
+            <button id="newConversation" class="secondary-action">
+                <span>🆕</span> New Memory Session
+            </button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
