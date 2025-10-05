@@ -3,57 +3,1071 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Keeper</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Memory Keeper - Your Family Story Vault</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="particles" id="particles"></div>
+
     <div class="container">
-        <header class="header">
-            <h1>💝 Memory Keeper</h1>
-            <p>Preserving precious family stories forever</p>
-        </header>
-        
-        <div class="chat-area" id="chatArea">
-            <div class="message ai-message">
-                <strong>Memory Keeper:</strong> Hello! I'm here to help you capture beautiful family memories. Tell me about a favorite childhood memory to get started! ✨
+        <!-- Progress Header -->
+        <div class="header">
+            <div class="logo-section">
+                <button class="menu-toggle" id="menuToggle">☰</button>
+                <div class="logo">📚</div>
+                <div class="logo-text">Memory Keeper</div>
+            </div>
+
+            <div class="stats-section">
+                <div class="stat-item">
+                    <div class="stat-number" id="memoryCount">0</div>
+                    <div class="stat-label">MEMORIES</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="streakCount">1</div>
+                    <div class="stat-label">STREAK</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
             </div>
         </div>
-        
-        <div class="prompts" id="prompts">
-    <p><strong>💡 Need ideas? Click any prompt:</strong></p>
-    <button onclick="usePrompt('Tell me about your first job')">Tell me about your first job</button>
-    <button onclick="usePrompt('What was your wedding day like?')">What was your wedding day like?</button>
-    <button onclick="usePrompt('Describe your childhood home')">Describe your childhood home</button>
-    <button onclick="showMorePrompts()" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none;">
-        More Ideas ✨
-    </button>
-</div>
 
-        
-        <div class="input-section">
-    <input type="text" id="messageInput" placeholder="Share your memory here...">
-    <button id="voiceButton" class="voice-btn" title="Click to record your memory">
-        🎤
-    </button>
-    <button onclick="sendMessage()" id="sendBtn">Send</button>
-</div>
-<div class="voice-status" id="voiceStatus" style="display: none;">
-    <div class="listening-animation">
-        <div class="pulse-dot"></div>
-        <span>Listening... speak your memory clearly</span>
+        <div class="main-content">
+            <!-- Sidebar Overlay -->
+            <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+            <!-- Sidebar -->
+            <div class="sidebar" id="sidebar">
+                <div class="quick-starters">
+                    <h3 class="section-title">
+                        ⚡ Quick Memory Starters
+                    </h3>
+                    <button class="starter-btn" onclick="addQuickStarter('Tell me about your first job')">
+                        Tell me about your first job
+                    </button>
+                    <button class="starter-btn" onclick="addQuickStarter('What was your wedding day like?')">
+                        What was your wedding day like?
+                    </button>
+                    <button class="starter-btn" onclick="addQuickStarter('Describe your childhood home')">
+                        Describe your childhood home
+                    </button>
+                    <button class="starter-btn" onclick="addQuickStarter('Share a funny family story')">
+                        Share a funny family story
+                    </button>
+                    <div class="more-ideas" onclick="toggleMoreIdeas()">More Ideas →</div>
+
+                    <div class="ideas-dropdown" id="ideasDropdown">
+                        <div class="idea-item" onclick="addQuickStarter('Tell me about your favorite childhood meal')">Tell me about your favorite childhood meal</div>
+                        <div class="idea-item" onclick="addQuickStarter('What was your first pet like?')">What was your first pet like?</div>
+                        <div class="idea-item" onclick="addQuickStarter('Describe a memorable family vacation')">Describe a memorable family vacation</div>
+                        <div class="idea-item" onclick="addQuickStarter('Tell me about your grandparents')">Tell me about your grandparents</div>
+                        <div class="idea-item" onclick="addQuickStarter('What was school like when you were young?')">What was school like when you were young?</div>
+                        <div class="idea-item" onclick="addQuickStarter('Share a story about your siblings')">Share a story about your siblings</div>
+                        <div class="idea-item" onclick="addQuickStarter('Tell me about a family tradition')">Tell me about a family tradition</div>
+                        <div class="idea-item" onclick="addQuickStarter('What was your neighborhood like growing up?')">What was your neighborhood like growing up?</div>
+                    </div>
+                </div>
+
+                <div class="daily-inspiration">
+                    <h3 class="section-title" style="color: #92400e; margin-bottom: 8px;">
+                        💡 Daily Inspiration
+                    </h3>
+                    <p class="inspiration-text" id="inspirationText">
+                        "Every family has a story. Welcome to your chapter."
+                    </p>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="createStory()">
+                        📖 Create Story
+                    </button>
+                    <button class="action-btn" onclick="viewStats()">
+                        📊 View Stats
+                    </button>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="familyTree()">
+                        🌳 Family Tree
+                    </button>
+                    <button class="action-btn primary" onclick="shareStory()">
+                        📤 Share Story
+                    </button>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="filterByPerson()">
+                        👥 By Person
+                    </button>
+                    <button class="action-btn" onclick="newChat()">
+                        💬 New Chat
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Area -->
+            <div class="chat-area">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="welcome-message">
+                        <h2 class="welcome-title">Memory Keeper</h2>
+                        <p class="welcome-subtitle">
+                            Hello! I'm here to help you capture beautiful family memories. Tell me about a favorite childhood memory to get started!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+
+                <div class="voice-status" id="voiceStatus">
+                    Listening... speak your memory clearly
+                </div>
+
+                <!-- Media Upload Area -->
+                <div class="media-upload-area" id="mediaUploadArea">
+                    <h4 style="margin-bottom: 12px; color: #374151; font-size: 14px;">Add Images or Videos</h4>
+                    <label for="imageInput" class="file-upload-btn">
+                        📷 Choose Images
+                        <input type="file" id="imageInput" class="file-input" accept="image/*" multiple>
+                    </label>
+                    <label for="videoInput" class="file-upload-btn">
+                        🎥 Choose Videos
+                        <input type="file" id="videoInput" class="file-input" accept="video/*" multiple>
+                    </label>
+                    <div id="filePreview" class="file-preview" style="display: none;"></div>
+                </div>
+
+                <div class="input-area">
+                    <div class="input-container">
+                        <textarea 
+                            class="message-input" 
+                            id="messageInput" 
+                            placeholder="Share your memory..."
+                            rows="1"
+                        ></textarea>
+                        <div class="input-buttons">
+                            <button class="media-btn" id="mediaBtn" title="Add images or videos">
+                                📎
+                            </button>
+                            <button class="voice-btn" id="voiceBtn" title="Voice message">
+                                🎤
+                            </button>
+                            <button class="send-btn" id="sendBtn" title="Send message">
+                                send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 
-        <div class="actions">
-    <button onclick="generateStory()" id="storyBtn">📖 Create Story</button>
-    <button onclick="showStats()" id="statsBtn">📊 View Stats</button>
-    <button onclick="shareMemoryStory()" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; font-weight: 600; transition: all 0.3s; font-size: 14px;">📤 Share</button>
-    <button onclick="newChat()" id="newBtn">🆕 New Chat</button>
-</div>
-
+    <!-- Modals -->
+    <div id="storyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">📖 Create Story</h2>
+                <button class="close-btn" onclick="closeModal('storyModal')">&times;</button>
+            </div>
+            <div class="story-form">
+                <div class="form-group">
+                    <label class="form-label">Story Title</label>
+                    <input type="text" class="form-input" id="storyTitle" placeholder="Give your story a memorable title">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" id="storyCategory">
+                        <option value="childhood">Childhood Memories</option>
+                        <option value="family">Family Stories</option>
+                        <option value="career">Career & Work</option>
+                        <option value="travel">Travel Adventures</option>
+                        <option value="traditions">Family Traditions</option>
+                        <option value="milestones">Life Milestones</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">People Involved</label>
+                    <input type="text" class="form-input" id="storyPeople" placeholder="Who was part of this story?">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Time Period</label>
+                    <input type="text" class="form-input" id="storyTime" placeholder="When did this happen?">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Your Story</label>
+                    <textarea class="form-textarea" id="storyContent" placeholder="Tell your story in detail..."></textarea>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="saveStoryDraft()">💾 Save Draft</button>
+                    <button class="action-btn primary" onclick="publishStory()">✨ Publish Story</button>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div id="statsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">📊 Your Memory Statistics</h2>
+                <button class="close-btn" onclick="closeModal('statsModal')">&times;</button>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-number" id="totalMemories">0</div>
+                    <div class="stat-card-label">Total Memories</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-number" id="totalWords">0</div>
+                    <div class="stat-card-label">Words Written</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-number" id="totalMedia">0</div>
+                    <div class="stat-card-label">Media Files</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-number" id="activeDays">1</div>
+                    <div class="stat-card-label">Active Days</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-number" id="storyCount">0</div>
+                    <div class="stat-card-label">Published Stories</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-number" id="familyMembers">0</div>
+                    <div class="stat-card-label">Family Members</div>
+                </div>
+            </div>
+            <div style="margin-top: 20px; padding: 15px; background: #f8fafc; border-radius: 12px;">
+                <h3 style="color: #1e293b; margin-bottom: 12px; font-size: 16px;">🏆 Achievements</h3>
+                <div id="achievements">
+                    <div style="margin-bottom: 8px; font-size: 13px;">🌟 Memory Keeper - Started your journey</div>
+                    <div style="margin-bottom: 8px; opacity: 0.5; font-size: 13px;">🔥 Week Warrior - Complete 7 days streak (Locked)</div>
+                    <div style="margin-bottom: 8px; opacity: 0.5; font-size: 13px;">📚 Story Teller - Publish 10 stories (Locked)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="familyTreeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">🌳 Family Tree</h2>
+                <button class="close-btn" onclick="closeModal('familyTreeModal')">&times;</button>
+            </div>
+            <div class="family-tree" id="familyTreeContainer">
+                <p style="text-align: center; color: #64748b; margin: 30px 0; font-size: 14px;">
+                    Your family tree will appear here as you mention family members in your stories.
+                </p>
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
+                    <button class="action-btn primary" onclick="addFamilyMember()">👥 Add Family Member</button>
+                    <button class="action-btn" onclick="generateFamilyTree()">🔄 Auto-Generate Tree</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">📤 Share Your Stories</h2>
+                <button class="close-btn" onclick="closeModal('shareModal')">&times;</button>
+            </div>
+            <div>
+                <p style="margin-bottom: 15px; color: #64748b; font-size: 14px;">Choose how you'd like to share your precious memories:</p>
+                <div class="export-options">
+                    <div class="export-btn" onclick="exportToPDF()">
+                        <div style="font-size: 20px; margin-bottom: 8px;">📄</div>
+                        <div style="font-weight: 600;">PDF Book</div>
+                        <div style="font-size: 11px; color: #64748b;">Printable memoir</div>
+                    </div>
+                    <div class="export-btn" onclick="shareViaEmail()">
+                        <div style="font-size: 20px; margin-bottom: 8px;">📧</div>
+                        <div style="font-weight: 600;">Email</div>
+                        <div style="font-size: 11px; color: #64748b;">Send to family</div>
+                    </div>
+                    <div class="export-btn" onclick="generateLink()">
+                        <div style="font-size: 20px; margin-bottom: 8px;">🔗</div>
+                        <div style="font-weight: 600;">Share Link</div>
+                        <div style="font-size: 11px; color: #64748b;">Private family link</div>
+                    </div>
+                    <div class="export-btn" onclick="exportToWord()">
+                        <div style="font-size: 20px; margin-bottom: 8px;">📝</div>
+                        <div style="font-weight: 600;">Word Doc</div>
+                        <div style="font-size: 11px; color: #64748b;">Editable document</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: #fef3c7; border-radius: 12px; border-left: 4px solid #f59e0b;">
+                    <h4 style="color: #92400e; margin-bottom: 8px; font-size: 14px;">🔒 Privacy Protected</h4>
+                    <p style="color: #92400e; font-size: 12px;">Your memories are always kept private and secure. You control who sees what.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="filterModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">👥 Filter by Person</h2>
+                <button class="close-btn" onclick="closeModal('filterModal')">&times;</button>
+            </div>
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="switchFilterTab('all')">All People</button>
+                <button class="filter-tab" onclick="switchFilterTab('family')">Family</button>
+                <button class="filter-tab" onclick="switchFilterTab('friends')">Friends</button>
+            </div>
+            <div class="person-list" id="personList">
+                <p style="text-align: center; color: #64748b; grid-column: 1/-1; font-size: 14px;">
+                    People will appear here as you mention them in your stories.
+                </p>
+            </div>
+        </div>
+    </div>
+    <script>
+         
+        // Global variables
+        let messages = [];
+        let stories = [];
+        let familyMembers = [];
+        let isRecording = false;
+        let recognition = null;
+        let selectedFiles = [];
+        let currentFilter = 'all';
+        let isMobileMenuOpen = false;
+
+        // Inspirational quotes
+        const inspirations = [
+            "Every family has a story. Welcome to your chapter.",
+            "Memories are the threads that weave the fabric of our lives.",
+            "In every old photo, there's a story waiting to be told.",
+            "Family stories are the greatest treasure we can leave behind.",
+            "Your memories today become tomorrow's precious history.",
+            "Every story shared is a gift to future generations.",
+            "The best stories are lived, not just told.",
+            "Memories are timeless treasures of the heart."
+        ];
+
+        // Initialize particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Mobile menu functionality
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        menuToggle.addEventListener('click', function() {
+            toggleMobileMenu();
+        });
+
+        sidebarOverlay.addEventListener('click', function() {
+            closeMobileMenu();
+        });
+
+        function toggleMobileMenu() {
+            isMobileMenuOpen = !isMobileMenuOpen;
+            if (isMobileMenuOpen) {
+                sidebar.classList.add('show');
+                sidebarOverlay.classList.add('show');
+                menuToggle.innerHTML = '✕';
+            } else {
+                closeMobileMenu();
+            }
+        }
+
+        function closeMobileMenu() {
+            isMobileMenuOpen = false;
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+            menuToggle.innerHTML = '☰';
+        }
+
+        // Close mobile menu when clicking on sidebar items
+        sidebar.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768 && (e.target.classList.contains('starter-btn') || e.target.classList.contains('action-btn'))) {
+                setTimeout(closeMobileMenu, 300);
+            }
+        });
+
+        // Update daily inspiration
+        function updateInspiration() {
+            const inspiration = inspirations[Math.floor(Math.random() * inspirations.length)];
+            document.getElementById('inspirationText').textContent = inspiration;
+        }
+
+        // Update inspiration every 30 seconds
+        setInterval(updateInspiration, 30000);
+
+        // Update progress indicators
+        function updateProgress() {
+            const userMessages = messages.filter(m => m.type === 'user');
+            const count = userMessages.length;
+
+            document.getElementById('memoryCount').textContent = count;
+
+            const progressPercent = Math.min(100, (count / 10) * 100);
+            document.getElementById('progressFill').style.width = progressPercent + '%';
+
+            // Update streak
+            const today = new Date().getDate();
+            const streak = parseInt(localStorage.getItem('streak')) || 1;
+            document.getElementById('streakCount').textContent = streak;
+        }
+
+        // Auto-resize textarea
+        const messageInput = document.getElementById('messageInput');
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Media upload functionality
+        const mediaBtn = document.getElementById('mediaBtn');
+        const mediaUploadArea = document.getElementById('mediaUploadArea');
+        const imageInput = document.getElementById('imageInput');
+        const videoInput = document.getElementById('videoInput');
+        const filePreview = document.getElementById('filePreview');
+
+        mediaBtn.addEventListener('click', function() {
+            mediaUploadArea.classList.toggle('show');
+        });
+
+        // Close media upload area when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!mediaUploadArea.contains(e.target) && !mediaBtn.contains(e.target)) {
+                mediaUploadArea.classList.remove('show');
+            }
+        });
+
+        // Handle image selection
+        imageInput.addEventListener('change', function(e) {
+            handleFileSelection(e.target.files, 'image');
+        });
+
+        // Handle video selection
+        videoInput.addEventListener('change', function(e) {
+            handleFileSelection(e.target.files, 'video');
+        });
+
+        // Handle file selection
+        function handleFileSelection(files, type) {
+            Array.from(files).forEach(file => {
+                if (selectedFiles.length < 5) { // Limit to 5 files
+                    selectedFiles.push({
+                        file: file,
+                        type: type,
+                        url: URL.createObjectURL(file)
+                    });
+                }
+            });
+            updateFilePreview();
+        }
+
+        // Update file preview
+        function updateFilePreview() {
+            if (selectedFiles.length === 0) {
+                filePreview.style.display = 'none';
+                return;
+            }
+
+            filePreview.style.display = 'block';
+            filePreview.innerHTML = '';
+
+            selectedFiles.forEach((fileObj, index) => {
+                const previewItem = document.createElement('div');
+                previewItem.style.marginBottom = '8px';
+
+                const fileName = document.createElement('div');
+                fileName.textContent = fileObj.file.name;
+                fileName.style.fontSize = '11px';
+                fileName.style.color = '#6b7280';
+                previewItem.appendChild(fileName);
+
+                if (fileObj.type === 'image') {
+                    const img = document.createElement('img');
+                    img.src = fileObj.url;
+                    img.style.maxWidth = '100%';
+                    img.style.maxHeight = '80px';
+                    img.style.borderRadius = '6px';
+                    img.style.marginTop = '5px';
+                    previewItem.appendChild(img);
+                } else if (fileObj.type === 'video') {
+                    const video = document.createElement('video');
+                    video.src = fileObj.url;
+                    video.controls = true;
+                    video.style.maxWidth = '100%';
+                    video.style.maxHeight = '80px';
+                    video.style.borderRadius = '6px';
+                    video.style.marginTop = '5px';
+                    previewItem.appendChild(video);
+                }
+
+                const removeBtn = document.createElement('button');
+                removeBtn.textContent = 'Remove';
+                removeBtn.className = 'remove-file';
+                removeBtn.onclick = () => removeFile(index);
+                previewItem.appendChild(removeBtn);
+
+                filePreview.appendChild(previewItem);
+            });
+        }
+
+        // Remove file from selection
+        function removeFile(index) {
+            URL.revokeObjectURL(selectedFiles[index].url);
+            selectedFiles.splice(index, 1);
+            updateFilePreview();
+        }
+
+        // Toggle more ideas dropdown
+        function toggleMoreIdeas() {
+            const dropdown = document.getElementById('ideasDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Send message function
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (message === '' && selectedFiles.length === 0) return;
+
+            // Extract people mentioned in the message
+            extractPeopleFromMessage(message);
+
+            // Create message object
+            const messageObj = {
+                type: 'user',
+                content: message,
+                media: [...selectedFiles],
+                timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            };
+
+            messages.push(messageObj);
+            addMessageToChat(messageObj);
+
+            // Clear input and selected files
+            input.value = '';
+            input.style.height = 'auto';
+            selectedFiles.forEach(fileObj => URL.revokeObjectURL(fileObj.url));
+            selectedFiles = [];
+            updateFilePreview();
+            mediaUploadArea.classList.remove('show');
+
+            // Generate bot response
+            setTimeout(() => {
+                generateBotResponse(messageObj);
+            }, 1000);
+
+            updateProgress();
+            saveToLocalStorage();
+        }
+
+        // Extract people mentioned in messages
+        function extractPeopleFromMessage(message) {
+            const commonNames = ['mom', 'dad', 'mother', 'father', 'brother', 'sister', 'grandma', 'grandpa', 'grandmother', 'grandfather', 'uncle', 'aunt', 'cousin', 'husband', 'wife', 'son', 'daughter'];
+            const words = message.toLowerCase().split(/\W+/);
+
+            words.forEach(word => {
+                if (commonNames.includes(word)) {
+                    const person = word.charAt(0).toUpperCase() + word.slice(1);
+                    if (!familyMembers.find(m => m.name.toLowerCase() === person.toLowerCase())) {
+                        familyMembers.push({
+                            name: person,
+                            relation: person,
+                            stories: 1,
+                            avatar: getRandomAvatar()
+                        });
+                    }
+                }
+            });
+        }
+
+        // Get random avatar
+        function getRandomAvatar() {
+            const avatars = ['👨', '👩', '👴', '👵', '👦', '👧', '👶', '🧑', '👨‍🦳', '👩‍🦳'];
+            return avatars[Math.floor(Math.random() * avatars.length)];
+        }
+
+        // Add message to chat
+        function addMessageToChat(messageObj) {
+            const chatMessages = document.getElementById('chatMessages');
+            const welcomeMessage = chatMessages.querySelector('.welcome-message');
+
+            if (welcomeMessage) {
+                welcomeMessage.remove();
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${messageObj.type}`;
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+
+            if (messageObj.content) {
+                const textDiv = document.createElement('div');
+                textDiv.textContent = messageObj.content;
+                contentDiv.appendChild(textDiv);
+            }
+
+            // Add media content
+            if (messageObj.media && messageObj.media.length > 0) {
+                messageObj.media.forEach(mediaObj => {
+                    const mediaDiv = document.createElement('div');
+                    mediaDiv.className = 'media-content';
+
+                    if (mediaObj.type === 'image') {
+                        const img = document.createElement('img');
+                        img.src = mediaObj.url;
+                        img.alt = 'Shared image';
+                        mediaDiv.appendChild(img);
+                    } else if (mediaObj.type === 'video') {
+                        const video = document.createElement('video');
+                        video.src = mediaObj.url;
+                        video.controls = true;
+                        video.alt = 'Shared video';
+                        mediaDiv.appendChild(video);
+                    }
+
+                    contentDiv.appendChild(mediaDiv);
+                });
+            }
+
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'message-time';
+            timeDiv.textContent = messageObj.timestamp;
+
+            messageDiv.appendChild(contentDiv);
+            messageDiv.appendChild(timeDiv);
+            chatMessages.appendChild(messageDiv);
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Generate bot response
+        function generateBotResponse(userMessage) {
+            const typingIndicator = document.getElementById('typingIndicator');
+            typingIndicator.style.display = 'block';
+
+            setTimeout(() => {
+                typingIndicator.style.display = 'none';
+
+                const responses = [
+                    "What a beautiful memory! Can you tell me more about the people who were there with you?",
+                    "That sounds like such a special moment. How did it make you feel at the time?",
+                    "I love hearing about these precious memories. What details do you remember most vividly?",
+                    "Thank you for sharing that with me. Are there any similar memories from that time period?",
+                    "That's a wonderful story! Who else in your family would remember this moment?",
+                    "What a treasure to have that memory. Can you describe the setting a bit more?",
+                    "That brings back such warmth! What happened next in that story?",
+                    "I can picture that so clearly from your description. What made that moment so special?",
+                    "Your family stories are so precious. How old were you when this happened?",
+                    "That memory sounds like it holds so much meaning. Do you have any photos from that time?"
+                ];
+
+                let responseText = responses[Math.floor(Math.random() * responses.length)];
+
+                // Add specific responses for media
+                if (userMessage.media && userMessage.media.length > 0) {
+                    if (userMessage.media.some(m => m.type === 'image')) {
+                        responseText = "What wonderful images! They really help bring your memory to life. " + responseText;
+                    }
+                    if (userMessage.media.some(m => m.type === 'video')) {
+                        responseText = "Thank you for sharing that video! It adds so much depth to your story. " + responseText;
+                    }
+                }
+
+                const botMessage = {
+                    type: 'bot',
+                    content: responseText,
+                    timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                };
+
+                messages.push(botMessage);
+                addMessageToChat(botMessage);
+                saveToLocalStorage();
+            }, 1500);
+        }
+
+        // Voice recording functionality
+        const voiceBtn = document.getElementById('voiceBtn');
+        const voiceStatus = document.getElementById('voiceStatus');
+
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            recognition.onstart = function() {
+                isRecording = true;
+                voiceBtn.classList.add('recording');
+                voiceStatus.style.display = 'block';
+            };
+
+            recognition.onresult = function(event) {
+                let transcript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    transcript += event.results[i][0].transcript;
+                }
+                document.getElementById('messageInput').value = transcript;
+            };
+
+            recognition.onend = function() {
+                isRecording = false;
+                voiceBtn.classList.remove('recording');
+                voiceStatus.style.display = 'none';
+            };
+        }
+
+        voiceBtn.addEventListener('click', function() {
+            if (isRecording) {
+                recognition.stop();
+            } else {
+                if (recognition) {
+                    recognition.start();
+                } else {
+                    alert('Speech recognition is not supported in your browser.');
+                }
+            }
+        });
+
+        // Send button functionality
+        document.getElementById('sendBtn').addEventListener('click', sendMessage);
+
+        // Enter key to send
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Quick starter functions
+        function addQuickStarter(text) {
+            document.getElementById('messageInput').value = text;
+            document.getElementById('messageInput').focus();
+        }
+
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Action button functions
+        function createStory() {
+            showModal('storyModal');
+        }
+
+        function viewStats() {
+            updateStatsModal();
+            showModal('statsModal');
+        }
+
+        function familyTree() {
+            updateFamilyTreeModal();
+            showModal('familyTreeModal');
+        }
+
+        function shareStory() {
+            showModal('shareModal');
+        }
+
+        function filterByPerson() {
+            updateFilterModal();
+            showModal('filterModal');
+        }
+
+        function newChat() {
+            if (confirm('Start a new chat? This will clear the current conversation.')) {
+                messages = [];
+                document.getElementById('chatMessages').innerHTML = `
+                    <div class="welcome-message">
+                        <h2 class="welcome-title">Memory Keeper</h2>
+                        <p class="welcome-subtitle">
+                            Hello! I'm here to help you capture beautiful family memories. Tell me about a favorite childhood memory to get started!
+                        </p>
+                    </div>
+                `;
+                updateProgress();
+                saveToLocalStorage();
+            }
+        }
+
+        // Story creation functions
+        function saveStoryDraft() {
+            const title = document.getElementById('storyTitle').value;
+            const category = document.getElementById('storyCategory').value;
+            const people = document.getElementById('storyPeople').value;
+            const time = document.getElementById('storyTime').value;
+            const content = document.getElementById('storyContent').value;
+
+            if (!title || !content) {
+                alert('Please fill in the title and story content.');
+                return;
+            }
+
+            const story = {
+                id: Date.now(),
+                title,
+                category,
+                people: people.split(',').map(p => p.trim()),
+                time,
+                content,
+                status: 'draft',
+                created: new Date().toISOString()
+            };
+
+            stories.push(story);
+            alert('Story draft saved successfully!');
+            closeModal('storyModal');
+            clearStoryForm();
+            saveToLocalStorage();
+        }
+
+        function publishStory() {
+            const title = document.getElementById('storyTitle').value;
+            const category = document.getElementById('storyCategory').value;
+            const people = document.getElementById('storyPeople').value;
+            const time = document.getElementById('storyTime').value;
+            const content = document.getElementById('storyContent').value;
+
+            if (!title || !content) {
+                alert('Please fill in the title and story content.');
+                return;
+            }
+
+            const story = {
+                id: Date.now(),
+                title,
+                category,
+                people: people.split(',').map(p => p.trim()),
+                time,
+                content,
+                status: 'published',
+                created: new Date().toISOString()
+            };
+
+            stories.push(story);
+            alert('Story published successfully! 🎉');
+            closeModal('storyModal');
+            clearStoryForm();
+            saveToLocalStorage();
+        }
+
+        function clearStoryForm() {
+            document.getElementById('storyTitle').value = '';
+            document.getElementById('storyCategory').value = 'childhood';
+            document.getElementById('storyPeople').value = '';
+            document.getElementById('storyTime').value = '';
+            document.getElementById('storyContent').value = '';
+        }
+
+        // Stats modal update
+        function updateStatsModal() {
+            const userMessages = messages.filter(m => m.type === 'user');
+            const totalWords = userMessages.reduce((sum, msg) => sum + (msg.content ? msg.content.split(' ').length : 0), 0);
+            const totalMedia = userMessages.reduce((sum, msg) => sum + (msg.media ? msg.media.length : 0), 0);
+
+            document.getElementById('totalMemories').textContent = userMessages.length;
+            document.getElementById('totalWords').textContent = totalWords;
+            document.getElementById('totalMedia').textContent = totalMedia;
+            document.getElementById('storyCount').textContent = stories.filter(s => s.status === 'published').length;
+            document.getElementById('familyMembers').textContent = familyMembers.length;
+        }
+
+        // Family tree modal update
+        function updateFamilyTreeModal() {
+            const container = document.getElementById('familyTreeContainer');
+
+            if (familyMembers.length === 0) {
+                container.innerHTML = `
+                    <p style="text-align: center; color: #64748b; margin: 30px 0; font-size: 14px;">
+                        Your family tree will appear here as you mention family members in your stories.
+                    </p>
+                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
+                        <button class="action-btn primary" onclick="addFamilyMember()">👥 Add Family Member</button>
+                        <button class="action-btn" onclick="generateFamilyTree()">🔄 Auto-Generate Tree</button>
+                    </div>
+                `;
+                return;
+            }
+
+            let treeHTML = '<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">';
+
+            familyMembers.forEach(member => {
+                treeHTML += `
+                    <div class="family-member">
+                        <div style="font-size: 32px; margin-bottom: 8px;">${member.avatar}</div>
+                        <div class="member-name">${member.name}</div>
+                        <div class="member-relation">${member.relation}</div>
+                        <div style="font-size: 11px; color: #64748b; margin-top: 4px;">${member.stories} stories</div>
+                    </div>
+                `;
+            });
+
+            treeHTML += '</div>';
+            container.innerHTML = treeHTML;
+        }
+
+        function addFamilyMember() {
+            const name = prompt('Enter family member name:');
+            const relation = prompt('Enter their relation to you (e.g., Mother, Brother, Cousin):');
+
+            if (name && relation) {
+                familyMembers.push({
+                    name: name,
+                    relation: relation,
+                    stories: 0,
+                    avatar: getRandomAvatar()
+                });
+                updateFamilyTreeModal();
+                saveToLocalStorage();
+            }
+        }
+
+        function generateFamilyTree() {
+            alert('Auto-generating family tree from your stories... This feature analyzes your memories to automatically identify family relationships!');
+        }
+
+        // Filter modal update
+        function updateFilterModal() {
+            const container = document.getElementById('personList');
+
+            if (familyMembers.length === 0) {
+                container.innerHTML = `
+                    <p style="text-align: center; color: #64748b; grid-column: 1/-1; font-size: 14px;">
+                        People will appear here as you mention them in your stories.
+                    </p>
+                `;
+                return;
+            }
+
+            let peopleHTML = '';
+            familyMembers.forEach(person => {
+                peopleHTML += `
+                    <div class="person-card" onclick="filterStories('${person.name}')">
+                        <div class="person-avatar">${person.avatar}</div>
+                        <div class="person-name">${person.name}</div>
+                        <div class="person-memories">${person.stories} memories</div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = peopleHTML;
+        }
+
+        function switchFilterTab(tab) {
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            currentFilter = tab;
+            updateFilterModal();
+        }
+
+        function filterStories(personName) {
+            alert(`Showing all stories mentioning ${personName}. This feature filters your memories by the people involved!`);
+            closeModal('filterModal');
+        }
+
+        // Export functions
+        function exportToPDF() {
+            alert('Generating PDF memoir... Your stories will be formatted into a beautiful printable book! 📖');
+        }
+
+        function shareViaEmail() {
+            const email = prompt('Enter email address to send your stories:');
+            if (email) {
+                alert(`Stories will be sent to ${email}! 📧`);
+            }
+        }
+
+        function generateLink() {
+            const link = 'https://memorykeeper.app/shared/' + Math.random().toString(36).substr(2, 9);
+            navigator.clipboard.writeText(link).then(() => {
+                alert(`Private sharing link copied to clipboard! 🔗\n\n${link}`);
+            });
+        }
+
+        function exportToWord() {
+            alert('Generating Word document... Your stories will be exported as an editable document! 📝');
+        }
+
+        // Local storage functions
+        function saveToLocalStorage() {
+            localStorage.setItem('memoryKeeper_messages', JSON.stringify(messages));
+            localStorage.setItem('memoryKeeper_stories', JSON.stringify(stories));
+            localStorage.setItem('memoryKeeper_familyMembers', JSON.stringify(familyMembers));
+        }
+
+        function loadFromLocalStorage() {
+            const savedMessages = localStorage.getItem('memoryKeeper_messages');
+            const savedStories = localStorage.getItem('memoryKeeper_stories');
+            const savedFamily = localStorage.getItem('memoryKeeper_familyMembers');
+
+            if (savedMessages) {
+                messages = JSON.parse(savedMessages);
+                messages.forEach(msg => addMessageToChat(msg));
+            }
+
+            if (savedStories) {
+                stories = JSON.parse(savedStories);
+            }
+
+            if (savedFamily) {
+                familyMembers = JSON.parse(savedFamily);
+            }
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768 && isMobileMenuOpen) {
+                closeMobileMenu();
+            }
+        });
+
+        // Prevent zoom on double tap for iOS
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromLocalStorage();
+            updateProgress();
+            updateInspiration();
+        });
+
     
-    <script src="script.js"></script>
+        </script>
 </body>
 </html>
